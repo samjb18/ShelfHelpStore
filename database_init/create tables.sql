@@ -1,7 +1,5 @@
 USE shelf_help_store;
 
-DROP TABLE authors;
-
 CREATE TABLE authors (
     author_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     author_forename VARCHAR(50) NOT NULL,
