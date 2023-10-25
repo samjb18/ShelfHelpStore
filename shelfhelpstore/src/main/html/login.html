@@ -31,10 +31,21 @@
 </header>
 
 <main>
-    <section id="about-us">
-        <h2>Login page</h2>
+        <div class="login-container">
+            <h2>Login</h2>
+            <form action="login.php" method="post">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn-login">Log In</button>
+            </form>
+        </div>
 
-    </section>
 
 <!--    <section id="actions">-->
 <!--        <h2>What you can do on our store...</h2>-->

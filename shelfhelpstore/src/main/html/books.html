@@ -69,7 +69,7 @@ fetch("http://localhost:8080/getBooks")
                     <a href="singleBook.html?isbn=${book.isbn}" class="book">
                         <img src="${book.cover}" alt="${book.book_title}">
                         <h2>${book.book_title}</h2>
-                        <p class="price">${book.price}</p>
+                        <p class="price">£${book.price}</p>
                     </a>
                 `;
                 bookList.appendChild(bookElement);

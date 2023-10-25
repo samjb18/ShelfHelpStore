@@ -10,9 +10,7 @@
 </head>
 <body>
 <header>
-<!--    <h1>Shelf Help Store</h1>-->
     <img src="shelfhelplogo.png" alt="logo" style="width:200px;height:200px;">
-<!--    background-color: #1C2949;-->
 
     <div class="navbar">
         <a href="homepage.html">Home</a>
@@ -46,6 +44,15 @@
 
 <script>
 
+function calculateStarRating(rating) {
+    const maxStars = 5;
+    const fullStars = Math.floor(rating);
+    const emptyStars = maxStars - fullStars;
+
+    const starIcons = '★'.repeat(fullStars) + '☆'.repeat(emptyStars) + rating;
+    return starIcons;
+}
+
 fetch("http://localhost:8080/getBooks")
     .then(response => {
         if (!response.ok) {
@@ -65,6 +72,7 @@ fetch("http://localhost:8080/getBooks")
       }
         });
       const bookElement = document.getElementById('book_profile');
+      const roundedStarRating = calculateStarRating(foundBook.rating);
 
       bookElement.innerHTML = `
         <div class="bookCover">
@@ -72,7 +80,8 @@ fetch("http://localhost:8080/getBooks")
         </div>
         <div class="bookDetails">
             <h2 id="bookTitle">${foundBook.book_title}</h2>
-            <p id="bookPrice">Price: ${foundBook.price}</p>
+            <div class="starRating">${roundedStarRating}</div>
+            <p id="bookPrice">Price: £${foundBook.price}</p>
             <p id="bookBlurb">${foundBook.blurb}</p>
         </div>
                 `;
