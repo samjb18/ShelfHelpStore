@@ -31,23 +31,20 @@
 </header>
 
 <main>
-    <section id="content">
-<!--        <section id="filters">-->
-<!--            <h2>Filter Options</h2>-->
-<!--        </section>-->
-
-        <section id="books">
-
-        </section>
-    </section>
+    <div id="book_profile" class="bookProfile">
+        <!-- <div class="bookCover">
+            <img src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1515691735i/35068705.jpg">
+        </div>
+        <div class="bookDetails">
+            <h2 id="bookTitle">Book Title</h2>
+            <p id="bookPrice">Price: £19.99</p>
+            <p id="bookDescription">Book Description goes here.</p>
+        </div> -->
+    </div>
 
 </main>
 
 <script>
-
-// function singleBookPage() {
-
-// }
 
 fetch("http://localhost:8080/getBooks")
     .then(response => {
@@ -57,30 +54,36 @@ fetch("http://localhost:8080/getBooks")
         return response.json();
     })
     .then(data => {
-        const bookList = document.getElementById('books');
-        
-        // Check if data is an array
-        if (Array.isArray(data)) {
-            data.forEach(book => {
-                const bookElement = document.createElement('div');
-                bookElement.className = 'book';
+        const urlParams = new URLSearchParams(window.location.search);
+        const isbn = urlParams.get('isbn');
+        console.log(isbn);
 
-                bookElement.innerHTML = `
-                    <a href="singleBook.html?isbn=${book.isbn}" class="book">
-                        <img src="${book.cover}" alt="${book.book_title}">
-                        <h2>${book.book_title}</h2>
-                        <p class="price">${book.price}</p>
-                    </a>
+        let foundBook = null;
+        data.forEach(book => {
+      if (book.isbn === isbn) {
+        foundBook = book;
+      }
+        });
+      const bookElement = document.getElementById('book_profile');
+
+      bookElement.innerHTML = `
+        <div class="bookCover">
+            <img src="${foundBook.cover}">
+        </div>
+        <div class="bookDetails">
+            <h2 id="bookTitle">${foundBook.book_title}</h2>
+            <p id="bookPrice">Price: ${foundBook.price}</p>
+            <p id="bookBlurb">${foundBook.blurb}</p>
+        </div>
                 `;
-                bookList.appendChild(bookElement);
-            });
-        } else {
-            console.error('Data is not in the expected array format.');
-        }
+    console.log(foundBook);
+        
+
     })
     .catch(error => {
         console.error('Error:', error);
     });
+
 
 </script>
 

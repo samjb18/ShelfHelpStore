@@ -107,8 +107,6 @@ main {
 
 .book {
     background-color: #fff;
-    border: 1px solid #ddd;
-    padding: 20px;
     text-align: center;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     margin: 10px;
@@ -120,6 +118,7 @@ main {
     max-width: 100%;
     height: auto;
     width: 110px;
+    margin-top: 10px; 
 }
 
 footer {
@@ -129,4 +128,47 @@ footer {
     font-size: 14px;
     color: #333;
     clear: both;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:link,
+a:visited {
+    color: inherit; 
+}
+
+.bookProfile {
+  display: flex;
+  align-items: center;
+}
+
+.bookCover {
+  flex: 1; 
+  margin: 50px;
+}
+
+.bookCover img {
+  max-width: 100%;
+  height: auto;
+  width: 100%; 
+}
+
+.bookDetails {
+  flex: 2; 
+  padding: 20px; 
+  text-align: left; 
+}
+
+#bookTitle {
+  font-size: 40px; 
+}
+
+#bookPrice {
+  font-size: 24px; 
+}
+
+#bookBlurb {
+  font-size: 20px; 
 }
