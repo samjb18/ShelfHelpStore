@@ -128,4 +128,14 @@ public class SQLController {
         }
         return null;
     }
+
+    public void addCustomer(String customer_forename, String customer_surname, String email, String password){
+        try{
+            Statement statement = connection.createStatement();
+            int result = statement.executeUpdate("INSERT INTO customers (customer_forename,customer_surname,email,password) VALUES(\"" + customer_forename + "\",\"" + customer_surname + "\",\"" + email + "\",md5(\"" + password + "\"));");
+        }
+        catch(Exception e){
+            System.out.println("Error when connecting to database: " + e);
+        }
+    }
 }

@@ -5,8 +5,8 @@ import com.google.gson.JsonArray;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
@@ -117,5 +117,17 @@ public class WebAPI {
         Gson gson = new Gson();
         //Convert the arraylist to string in JSON format and return it
         return (gson.toJsonTree(genres).getAsJsonArray()).toString();
+    }
+
+    @RequestMapping(value = "/signUp", method = RequestMethod.GET)
+    public String signUp(
+        @RequestParam("customer_forename") String customer_forename,
+        @RequestParam("customer_surname") String customer_surname,
+        @RequestParam("email") String email,
+        @RequestParam("password") String password,
+        Model model
+    ){
+        sql.addCustomer(customer_forename,customer_surname,email,password);
+        return "Hello there";
     }
 }
