@@ -26,13 +26,21 @@
                 <a href="signup.html">Sign Up</a>
             </div>
         </div>
+        <div class="shoppingCart">
+            <img src="shoppingcart.png" alt="Shopping Basket" id="cartIcon">
+        </div>
+        
+    </div>
+
+    <div id="cartPanel" class="cartPanel">
+        <h2>Shopping Basket</h2>
+        
     </div>
 
 </header>
 
 <main>
     <section id="about-us">
-        <!-- <h2>About Us</h2> -->
         <div class="container">
             <h2>A World of Books, Just a Click Away</h2>
             <p>Established by a passionate team of bibliophiles, Shelf Help Store is your go-to destination for a vast and diverse collection of books. Whether you're an avid reader, a casual browser, or someone seeking knowledge and inspiration, we have a literary treasure trove to cater to your every need.</p>
@@ -56,6 +64,21 @@
     </section>
 
 </main>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const cartIcon = document.getElementById("cartIcon");
+    const cartPanel = document.getElementById("cartPanel");
+
+    cartIcon.addEventListener("click", function () {
+        if (cartPanel.style.right === "0px") {
+            cartPanel.style.right = "-300px";
+        } else {
+            cartPanel.style.right = "0px";
+        }
+    });
+});
+</script>
 
 <footer>
     <p>&copy; Shelf Help Store 2023</p>

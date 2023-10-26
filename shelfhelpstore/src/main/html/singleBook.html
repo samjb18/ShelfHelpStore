@@ -24,6 +24,15 @@
                 <a href="signup.html">Sign Up</a>
             </div>
         </div>
+        <div class="shoppingCart">
+            <img src="shoppingcart.png" alt="Shopping Basket" id="cartIcon">
+        </div>
+        
+    </div>
+
+    <div id="cartPanel" class="cartPanel">
+        <h2>Shopping Basket</h2>
+        
     </div>
 
 </header>
@@ -43,6 +52,19 @@
 </main>
 
 <script>
+
+document.addEventListener("DOMContentLoaded", function () {
+    const cartIcon = document.getElementById("cartIcon");
+    const cartPanel = document.getElementById("cartPanel");
+
+    cartIcon.addEventListener("click", function () {
+        if (cartPanel.style.right === "0px") {
+            cartPanel.style.right = "-300px";
+        } else {
+            cartPanel.style.right = "0px";
+        }
+    });
+});
 
 function calculateStarRating(rating) {
     const maxStars = 5;

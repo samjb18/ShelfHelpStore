@@ -1,6 +1,7 @@
 header {
     background-color: #E8F2FE;
     padding: 1px;
+    position: relative;
     text-align: center;
 }
 
@@ -233,4 +234,31 @@ a:visited {
 
 .hide {
   display: none;
+}
+
+.shoppingCart {
+  position: relative;
+  top: 10px;
+  right: 10px;
+}
+
+#cartIcon {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+.cartPanel {
+  position: fixed;
+  top: 0;
+  right: -300px; 
+  width: 300px;
+  height: 100%;
+  background-color: #fff;
+  box-shadow: -5px 0px 5px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  overflow-y: auto;
+  transition: right 0.3s;
 }
