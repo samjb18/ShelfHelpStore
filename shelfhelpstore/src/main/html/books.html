@@ -36,6 +36,12 @@
 <!--            <h2>Filter Options</h2>-->
 <!--        </section>-->
 
+        <section id="searchBar">
+            <h2>Search Books</h2>
+            <input type="text" id="searchInput" placeholder="Search by author, genre, or book title">
+            <button id="searchButton">Search</button>
+        </section>
+
         <section id="books">
 
         </section>
@@ -45,42 +51,113 @@
 
 <script>
 
-// function singleBookPage() {
-
-// }
-
-fetch("http://localhost:8080/getBooks")
+fetch("http://localhost:8080/getAuthors")
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
         return response.json();
     })
-    .then(data => {
-        const bookList = document.getElementById('books');
-        
-        // Check if data is an array
-        if (Array.isArray(data)) {
-            data.forEach(book => {
-                const bookElement = document.createElement('div');
-                bookElement.className = 'book';
+    .then(authorsData => {
+        const authorsMap = {};
+        authorsData.forEach(author => {
+            authorsMap[author.author_id] = [author.author_forename, author.author_surname];
+            //console.log(authorsMap)
+        });
 
-                bookElement.innerHTML = `
-                    <a href="singleBook.html?isbn=${book.isbn}" class="book">
-                        <img src="${book.cover}" alt="${book.book_title}">
-                        <h2>${book.book_title}</h2>
-                        <p class="price">£${book.price}</p>
-                    </a>
-                `;
-                bookList.appendChild(bookElement);
+        fetch("http://localhost:8080/getGenres")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(genresData => {
+                const genresMap = {};
+                genresData.forEach(genre => {
+                    genresMap[genre.genre_id] = genre.genre;
+                });
+
+                fetch("http://localhost:8080/getBooks")
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const bookList = document.getElementById('books');
+                        
+                        // Check if data is an array
+                        if (Array.isArray(data)) {
+                            data.forEach(book => {
+                                const bookElement = document.createElement('div');
+                                bookElement.className = 'book';
+
+                                const genreName = genresMap[book.genre_id];
+                                //console.log(genreName);
+
+                                const authorName = authorsMap[book.author_id];
+                                //console.log(authorName);
+
+                                bookElement.innerHTML = `
+                                    <a href="singleBook.html?isbn=${book.isbn}" class="book">
+                                        <img src="${book.cover}" alt="${book.book_title}">
+                                        <h2>${book.book_title}</h2>
+                                        <p class="author">${authorName[0]} ${authorName[1]}</p>
+                                        <p class="genre">${genreName}</p>
+                                        <p class="price">£${book.price}</p>
+                                    </a>
+                                `;
+                                bookList.appendChild(bookElement);
+                            });
+                        } else {
+                            console.error('Data is not in the expected array format.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                })
+            .catch(error => {
+                console.error('Error:', error);
             });
-        } else {
-            console.error('Data is not in the expected array format.');
-        }
-    })
+        })
     .catch(error => {
         console.error('Error:', error);
     });
+
+const searchButton = document.getElementById('searchButton');
+const searchInput = document.getElementById('searchInput');
+
+searchButton.addEventListener('click', () => {
+    const searchTerm = searchInput.value.toLowerCase();
+    const bookElements = document.querySelectorAll('.book');
+
+    // bookElements.forEach(bookElement => {
+    //     bookElement.style.display = 'block';
+    // });
+
+    bookElements.forEach(bookElement => {
+        const bookTitle = bookElement.querySelector('h2').textContent.toLowerCase();
+        const bookAuthor = bookElement.querySelector('.author').textContent.toLowerCase();
+        const bookGenre = bookElement.querySelector('.genre').textContent.toLowerCase();
+
+        if (
+            bookTitle.includes(searchTerm) ||
+            bookAuthor.includes(searchTerm) ||
+            bookGenre.includes(searchTerm)
+        ) {
+            //bookElement.style.display = 'block';
+            //bookElement.style.display = 'visible';
+            bookElement.classList.remove('hide');
+        } else {
+            //bookElement.style.display = 'none';
+            //bookElement.style.visibiity = 'hidden';
+            bookElement.classList.add('hide');
+        }
+    });
+});
 
 </script>
 

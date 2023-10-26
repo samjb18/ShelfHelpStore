@@ -82,6 +82,8 @@ fetch("http://localhost:8080/getBooks")
             <h2 id="bookTitle">${foundBook.book_title}</h2>
             <div class="starRating">${roundedStarRating}</div>
             <p id="bookPrice">Price: £${foundBook.price}</p>
+            <p class="author">Author: ${foundBook.author}</p>
+            <p class="genre">Genre: ${foundBook.genre}</p>
             <p id="bookBlurb">${foundBook.blurb}</p>
         </div>
                 `;

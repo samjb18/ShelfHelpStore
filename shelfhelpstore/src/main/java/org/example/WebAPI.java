@@ -73,4 +73,49 @@ public class WebAPI {
         //Convert the arraylist to string in JSON format and return it
         return (gson.toJsonTree(books).getAsJsonArray()).toString();
     }
+
+    @GetMapping("/getAuthors") //Returns all books in the database
+    public String returnAuthors(){
+
+        ArrayList<Author> authors = new ArrayList<Author>();
+        Author tempAuthor = null;
+
+        //Store the results of the sql statement in a 2D array. Each row is one book
+        String[][] srs = sql.fetchAuthors();
+
+        for(int i = 0; i < srs.length; i++){
+            for(int j = 0; j < srs[i].length; j++){
+                //Create a new book for each row and add it to the arraylist
+                tempAuthor = new Author(Integer.parseInt(srs[i][0]), srs[i][1],
+                        srs[i][2]);
+            }
+            authors.add(tempAuthor);
+        }
+
+        Gson gson = new Gson();
+        //Convert the arraylist to string in JSON format and return it
+        return (gson.toJsonTree(authors).getAsJsonArray()).toString();
+    }
+
+    @GetMapping("/getGenres") //Returns all books in the database
+    public String returnGenres(){
+
+        ArrayList<Genre> genres = new ArrayList<Genre>();
+        Genre tempGenre = null;
+
+        //Store the results of the sql statement in a 2D array. Each row is one genre
+        String[][] srs = sql.fetchGenres();
+
+        for(int i = 0; i < srs.length; i++){
+            for(int j = 0; j < srs[i].length; j++){
+                //Create a new genre for each row and add it to the arraylist
+                tempGenre = new Genre(Integer.parseInt(srs[i][0]), srs[i][1]);
+            }
+            genres.add(tempGenre);
+        }
+
+        Gson gson = new Gson();
+        //Convert the arraylist to string in JSON format and return it
+        return (gson.toJsonTree(genres).getAsJsonArray()).toString();
+    }
 }

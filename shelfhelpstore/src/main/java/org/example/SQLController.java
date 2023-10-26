@@ -76,4 +76,56 @@ public class SQLController {
         }
         return null;
     }
+
+    public String[][] fetchAuthors(){
+        //Fetches all the authors stored within the database
+        int rowCount = 1;
+
+        try{
+
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM authors");
+            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            String[][] results = new String[getQueryRowCount("SELECT * FROM authors")][resultSetMetaData.getColumnCount()];
+
+            while(resultSet.next()){
+                for(int i = 1; i <= resultSetMetaData.getColumnCount(); i++){
+                    results[rowCount - 1][i - 1] = resultSet.getString(i);
+                }
+                rowCount ++;
+            }
+
+            return results;
+        }
+        catch(Exception e){
+            System.out.println("Error when connecting to database: " + e);
+        }
+        return null;
+    }
+
+    public String[][] fetchGenres(){
+        //Fetches all the genres stored within the database
+        int rowCount = 1;
+
+        try{
+
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM genres");
+            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            String[][] results = new String[getQueryRowCount("SELECT * FROM genres")][resultSetMetaData.getColumnCount()];
+
+            while(resultSet.next()){
+                for(int i = 1; i <= resultSetMetaData.getColumnCount(); i++){
+                    results[rowCount - 1][i - 1] = resultSet.getString(i);
+                }
+                rowCount ++;
+            }
+
+            return results;
+        }
+        catch(Exception e){
+            System.out.println("Error when connecting to database: " + e);
+        }
+        return null;
+    }
 }
