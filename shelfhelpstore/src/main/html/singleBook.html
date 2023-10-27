@@ -31,6 +31,7 @@
     </div>
 
     <div id="cartPanel" class="cartPanel">
+        <h1 onclick="toggleCartPanel()" class="close-panel-button">X</h1>
         <h2>Shopping Basket</h2>
         
     </div>
@@ -58,7 +59,7 @@ function toggleCartPanel() {
     updateCartPanel();
     const cartPanel = document.getElementById("cartPanel");
     if (isCartPanelOpen) {
-        cartPanel.style.right = "-300px";
+        cartPanel.style.right = "-400px";
     } else {
         cartPanel.style.right = "0px";
     }
@@ -178,51 +179,55 @@ function addToCart() {
             price: foundBook.price,
             cover: foundBook.cover,
     };
+
     //console.log(foundBook.cover);
-        // Retrieve the existing cart data from local storage
+
+    // Retrieve the existing cart data from local storage
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-        // Add the new item to the cart
     cart.push(cartItem);
 
-        // Store the updated cart data in local storage
+    // Store the updated cart data in local storage
     localStorage.setItem('cart', JSON.stringify(cart));
 
-        // Update the cart panel
     updateCartPanel();
-
-        // Optionally, you can display a success message
-    alert('Item added to the cart!');
 }
 
 function updateCartPanel() {
     const cartPanel = document.getElementById('cartPanel');
-    cartPanel.innerHTML = '<h2>Shopping Basket</h2>';
+    cartPanel.innerHTML = `
+        <h1 align="left" onclick="toggleCartPanel()" class="close-panel-button">X</h1>
+        <h2 align="right">Shopping Basket</h2>`;
 
     // Retrieve the cart data from local storage
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    // Create cart items in the cart panel
     cart.forEach(item => {
         const cartItem = document.createElement('div');
         cartItem.className = 'cart-item';
 
         const coverImage = document.createElement('img');
         coverImage.src = item.cover;
-        console.log(item.cover);
         coverImage.className = 'cart-item-cover';
 
-        cartItem.innerHTML += `
-            <span class="cart-item-title">${item.title}</span>
-            <span class="cart-item-price">£${item.price}</span>
-        `;
+        const bookTitle = document.createElement('span');
+        bookTitle.className = 'cart-item-title';
+        bookTitle.textContent = item.title;
+
+        const bookPrice = document.createElement('span');
+        bookPrice.className = 'cart-item-price';
+        bookPrice.textContent = `£${item.price}`;
 
         const deleteButton = document.createElement('button');
         deleteButton.innerHTML = 'X';
-        deleteButton.className = 'delete-button'; 
-        deleteButton.addEventListener('click', () => deleteCartItem(index));
+        deleteButton.className = 'delete-button';
+        deleteButton.addEventListener('click', () => deleteCartItem(cart.indexOf(item)));
 
         cartItem.appendChild(coverImage);
+        cartItem.appendChild(bookTitle);
+        cartItem.appendChild(bookPrice);
+        cartItem.appendChild(deleteButton);
+
         cartPanel.appendChild(cartItem);
     });
 }
@@ -233,7 +238,7 @@ function deleteCartItem(index) {
     if (index >= 0 && index < cart.length) {
         cart.splice(index, 1); // Remove the item from the cart array
         localStorage.setItem('cart', JSON.stringify(cart)); // Update the cart data in local storage
-        updateCartPanel(); // Refresh the cart panel to reflect the changes
+        updateCartPanel();
     }
 }
 

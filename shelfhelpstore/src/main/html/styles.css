@@ -1,6 +1,6 @@
 header {
     background-color: #E8F2FE;
-    padding: 1px;
+    padding: 0;
     position: relative;
     text-align: center;
 }
@@ -15,7 +15,6 @@ header {
   align-items: center;
 }
 
-/* Links inside the navbar */
 .navbar a {
   font-size: 25px;
   color: black;
@@ -25,13 +24,11 @@ header {
   display: inline-block;
 }
 
-/* The dropdown container */
 .dropdown {
   float: left;
   overflow: hidden;
 }
 
-/* Dropdown button */
 .dropdown .dropbtn {
   font-size: 25px;
   border: none;
@@ -253,8 +250,8 @@ a:visited {
 .cartPanel {
   position: fixed;
   top: 0;
-  right: -300px; 
-  width: 300px;
+  right: -400px; 
+  width: 400px;
   height: 100%;
   background-color: #fff;
   box-shadow: -5px 0px 5px rgba(0, 0, 0, 0.2);
@@ -273,6 +270,7 @@ a:visited {
 
 .cart-item-price {
   font-weight: bold;
+  margin-left: 5px;
 }
 
 .button-container {
@@ -303,11 +301,27 @@ a:visited {
 }
 
 .delete-button {
-  background-color: #ff0000; /* Red background color */
-  color: #fff; /* White text color */
+  background-color: #fff; 
+  color: #ff0000; 
   border: none;
   padding: 5px 10px;
   cursor: pointer;
   font-size: 16px;
-  border-radius: 50%; /* Makes the button round */
+  border-radius: 20%; 
+}
+
+.close-panel-button {
+  z-index: 1 !important;
+  background-color: #fff; 
+  color: black; 
+  border: none;
+  padding: 0px;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  border-radius: 20%; 
+  top: 10px;
+  left: 10px;
+  margin-bottom: 0px;
+  margin-left: 15px;
 }
