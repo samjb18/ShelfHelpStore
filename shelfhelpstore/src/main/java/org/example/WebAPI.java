@@ -8,6 +8,9 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+
 import java.util.ArrayList;
 
 import static org.apache.logging.log4j.message.MapMessage.MapFormat.JSON;
@@ -133,5 +136,40 @@ public class WebAPI {
         }
         sql.addCustomer(customer_forename,customer_surname,email,password);
         return "signup_Success";
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String login(
+            @RequestParam("email") String email,
+            @RequestParam("password") String password,
+            Model model
+    ){
+        if(sql.doesEmailAlreadyExist(email)){
+            String realPassword = sql.getPassword(email);
+            try{
+                MessageDigest md = MessageDigest.getInstance("md5");
+                byte[] messageDigest = md.digest(password.getBytes());
+                BigInteger bo = new BigInteger(1, messageDigest);
+                String hashtext = bo.toString(16);
+                while (hashtext.length() < 32) {
+                    hashtext = "0" + hashtext;
+                }
+                if(hashtext.equals(realPassword)){
+                    return "login_successful";
+                }
+                else{
+                    model.addAttribute("error", "Incorrect password");
+                    return "login_fail";
+                }
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            model.addAttribute("error", "Email does not exist");
+            return "login_fail";
+        }
+        return "Hello There";
     }
 }

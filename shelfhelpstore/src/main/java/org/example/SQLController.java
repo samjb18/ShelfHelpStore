@@ -144,12 +144,24 @@ public class SQLController {
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery("SELECT COUNT(*) FROM customers WHERE email = \""+ email + "\";");
             result.next();
-            System.out.println(result.getInt(1));
             return (result.getInt(1) > 0);
         }
         catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public String getPassword(String email){
+        try{
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery("SELECT password FROM customers WHERE email = \""+ email + "\";");
+            result.next();
+            return result.getString(1);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }
