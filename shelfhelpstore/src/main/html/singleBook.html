@@ -39,31 +39,45 @@
 
 <main>
     <div id="book_profile" class="bookProfile">
-        <!-- <div class="bookCover">
-            <img src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1515691735i/35068705.jpg">
-        </div>
-        <div class="bookDetails">
-            <h2 id="bookTitle">Book Title</h2>
-            <p id="bookPrice">Price: £19.99</p>
-            <p id="bookDescription">Book Description goes here.</p>
-        </div> -->
+
+    </div>
+
+    <div class="button-container">
+        <button id="addToCartButton" onclick="addToCart()">Add to Cart</button>
     </div>
 
 </main>
 
 <script>
 
+let foundBook;
+
+let isCartPanelOpen = false;
+
+function toggleCartPanel() {
+    updateCartPanel();
+    const cartPanel = document.getElementById("cartPanel");
+    if (isCartPanelOpen) {
+        cartPanel.style.right = "-300px";
+    } else {
+        cartPanel.style.right = "0px";
+    }
+    isCartPanelOpen = !isCartPanelOpen; 
+}
+
 document.addEventListener("DOMContentLoaded", function () {
+    updateCartPanel();
     const cartIcon = document.getElementById("cartIcon");
     const cartPanel = document.getElementById("cartPanel");
+    const addToCartButton = document.getElementById("addToCartButton");
 
-    cartIcon.addEventListener("click", function () {
-        if (cartPanel.style.right === "0px") {
-            cartPanel.style.right = "-300px";
-        } else {
-            cartPanel.style.right = "0px";
-        }
+    cartIcon.addEventListener("click", toggleCartPanel);
+
+    addToCartButton.addEventListener("click", function () {
+        toggleCartPanel();
     });
+
+
 });
 
 function calculateStarRating(rating) {
@@ -75,47 +89,153 @@ function calculateStarRating(rating) {
     return starIcons;
 }
 
-fetch("http://localhost:8080/getBooks")
+fetch("http://localhost:8080/getAuthors")
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
         return response.json();
     })
-    .then(data => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const isbn = urlParams.get('isbn');
-        console.log(isbn);
-
-        let foundBook = null;
-        data.forEach(book => {
-      if (book.isbn === isbn) {
-        foundBook = book;
-      }
+    .then(authorsData => {
+        const authorsMap = {};
+        authorsData.forEach(author => {
+            authorsMap[author.author_id] = [author.author_forename, author.author_surname];
+            //console.log(authorsMap)
         });
-      const bookElement = document.getElementById('book_profile');
-      const roundedStarRating = calculateStarRating(foundBook.rating);
 
-      bookElement.innerHTML = `
-        <div class="bookCover">
-            <img src="${foundBook.cover}">
-        </div>
-        <div class="bookDetails">
-            <h2 id="bookTitle">${foundBook.book_title}</h2>
-            <div class="starRating">${roundedStarRating}</div>
-            <p id="bookPrice">Price: £${foundBook.price}</p>
-            <p class="author">Author: ${foundBook.author}</p>
-            <p class="genre">Genre: ${foundBook.genre}</p>
-            <p id="bookBlurb">${foundBook.blurb}</p>
-        </div>
-                `;
-    console.log(foundBook);
-        
+        fetch("http://localhost:8080/getGenres")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(genresData => {
+                const genresMap = {};
+                genresData.forEach(genre => {
+                    genresMap[genre.genre_id] = genre.genre;
+                });
 
-    })
+                fetch("http://localhost:8080/getBooks")
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const isbn = urlParams.get('isbn');
+                        console.log(isbn);
+
+                        // let foundBook = null;
+                        data.forEach(book => {
+                    if (book.isbn === isbn) {
+                        foundBook = book;
+                    }
+                        });
+                    const bookElement = document.getElementById('book_profile');
+                    const roundedStarRating = calculateStarRating(foundBook.rating);
+
+                    const genreName = genresMap[foundBook.genre_id];
+                    const authorName = authorsMap[foundBook.author_id];
+
+                    bookElement.innerHTML = `
+                        <div class="bookCover">
+                            <img src="${foundBook.cover}">
+                        </div>
+                        <div class="bookDetails">
+                            <h2 id="bookTitle">${foundBook.book_title}</h2>
+                            <div class="starRating">${roundedStarRating}</div>
+                            <p id="bookPrice">Price: £${foundBook.price}</p>
+                            <p class="author">${authorName[0]} ${authorName[1]}</p>
+                            <p class="genre">${genreName}</p>
+                            <p id="bookBlurb">${foundBook.blurb}</p>
+                        </div>
+                                `;
+                    console.log(foundBook);
+                        
+
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        })
     .catch(error => {
         console.error('Error:', error);
     });
+
+
+function addToCart() {
+    console.log("Add to Cart button clicked!");
+    
+    const cartItem = {
+            title: foundBook.book_title,
+            price: foundBook.price,
+            cover: foundBook.cover,
+    };
+    //console.log(foundBook.cover);
+        // Retrieve the existing cart data from local storage
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // Add the new item to the cart
+    cart.push(cartItem);
+
+        // Store the updated cart data in local storage
+    localStorage.setItem('cart', JSON.stringify(cart));
+
+        // Update the cart panel
+    updateCartPanel();
+
+        // Optionally, you can display a success message
+    alert('Item added to the cart!');
+}
+
+function updateCartPanel() {
+    const cartPanel = document.getElementById('cartPanel');
+    cartPanel.innerHTML = '<h2>Shopping Basket</h2>';
+
+    // Retrieve the cart data from local storage
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    // Create cart items in the cart panel
+    cart.forEach(item => {
+        const cartItem = document.createElement('div');
+        cartItem.className = 'cart-item';
+
+        const coverImage = document.createElement('img');
+        coverImage.src = item.cover;
+        console.log(item.cover);
+        coverImage.className = 'cart-item-cover';
+
+        cartItem.innerHTML += `
+            <span class="cart-item-title">${item.title}</span>
+            <span class="cart-item-price">£${item.price}</span>
+        `;
+
+        const deleteButton = document.createElement('button');
+        deleteButton.innerHTML = 'X';
+        deleteButton.className = 'delete-button'; 
+        deleteButton.addEventListener('click', () => deleteCartItem(index));
+
+        cartItem.appendChild(coverImage);
+        cartPanel.appendChild(cartItem);
+    });
+}
+
+function deleteCartItem(index) {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    if (index >= 0 && index < cart.length) {
+        cart.splice(index, 1); // Remove the item from the cart array
+        localStorage.setItem('cart', JSON.stringify(cart)); // Update the cart data in local storage
+        updateCartPanel(); // Refresh the cart panel to reflect the changes
+    }
+}
 
 
 </script>

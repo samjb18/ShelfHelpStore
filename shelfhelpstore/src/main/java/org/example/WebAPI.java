@@ -127,7 +127,11 @@ public class WebAPI {
         @RequestParam("password") String password,
         Model model
     ){
+        if (sql.doesEmailAlreadyExist(email)) {
+            model.addAttribute("error", "Email already exists");
+            return "signup_Fail";
+        }
         sql.addCustomer(customer_forename,customer_surname,email,password);
-        return "Hello there";
+        return "signup_Success";
     }
 }

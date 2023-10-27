@@ -138,4 +138,17 @@ public class SQLController {
             System.out.println("Error when connecting to database: " + e);
         }
     }
+
+    public boolean doesEmailAlreadyExist(String email) {
+        try{
+            Statement statement = connection.createStatement();
+            int result = statement.executeUpdate("SELECT COUNT(*) FROM customers WHERE email = \""+ email + "\";");
+            System.out.println(result);
+            return (result > 0);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

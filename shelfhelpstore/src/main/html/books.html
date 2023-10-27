@@ -60,17 +60,44 @@
 
 <script>
 
+let isCartPanelOpen = false;
+
+function toggleCartPanel() {
+    updateCartPanel();
+    const cartPanel = document.getElementById("cartPanel");
+    if (isCartPanelOpen) {
+        cartPanel.style.right = "-300px";
+    } else {
+        cartPanel.style.right = "0px";
+    }
+    isCartPanelOpen = !isCartPanelOpen; 
+}
+
+function updateCartPanel() {
+    const cartPanel = document.getElementById('cartPanel');
+    cartPanel.innerHTML = '<h2>Shopping Basket</h2>';
+
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    cart.forEach(item => {
+        const cartItem = document.createElement('div');
+        cartItem.className = 'cart-item';
+        cartItem.innerHTML = `
+            <span class="cart-item-title">${item.title}</span>
+            <span class="cart-item-price">£${item.price}</span>
+        `;
+        cartPanel.appendChild(cartItem);
+    });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
+    updateCartPanel();
     const cartIcon = document.getElementById("cartIcon");
     const cartPanel = document.getElementById("cartPanel");
+    const addToCartButton = document.getElementById("addToCartButton");
 
-    cartIcon.addEventListener("click", function () {
-        if (cartPanel.style.right === "0px") {
-            cartPanel.style.right = "-300px";
-        } else {
-            cartPanel.style.right = "0px";
-        }
-    });
+    cartIcon.addEventListener("click", toggleCartPanel);
+
 });
 
 fetch("http://localhost:8080/getAuthors")
