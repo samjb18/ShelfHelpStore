@@ -168,7 +168,7 @@ public class WebAPI {
         }
         else{
             model.addAttribute("error", "Email does not exist");
-            return "login_fail";
+            return "login_fail_email";
         }
         return "Hello There";
     }

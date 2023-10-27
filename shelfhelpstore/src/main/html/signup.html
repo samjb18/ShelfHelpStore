@@ -96,16 +96,6 @@ function updateCartPanel() {
     });
 }
 
-// document.addEventListener("DOMContentLoaded", function () {
-//     updateCartPanel();
-//     const cartIcon = document.getElementById("cartIcon");
-//     const cartPanel = document.getElementById("cartPanel");
-//     const addToCartButton = document.getElementById("addToCartButton");
-
-//     cartIcon.addEventListener("click", toggleCartPanel);
-
-// });
-
 document.addEventListener("DOMContentLoaded", function () {
     const cartIcon = document.getElementById("cartIcon");
     const cartPanel = document.getElementById("cartPanel");
@@ -117,21 +107,25 @@ document.addEventListener("DOMContentLoaded", function () {
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
 
+        if (forename == "" || surname == "" || email == "" || password == "") {
+            throw new Error('No details entered.');
+        };
+
         const url = `http://localhost:8080/signUp?customer_forename=${forename}&customer_surname=${surname}&email=${email}&password=${password}`;
 
         fetch(url, {
             method: 'GET',
         })
         .then(response => {
-            if (response.text == "signup_Success") {
-                return response.text();
-            } else {
-                alert("Email already exists!");
-                throw new Error('Network response was not ok');
-            }
+            return response.text()
         })
         .then(data => {
-            console.log(data);
+            if (data == "signup_Success") {
+                alert("Sign up successful. Please proceed to login.");
+                window.location.replace(window.location.search + "login.html");
+            } else {
+                
+            }
         })
         .catch(error => {
             console.error('Error:', error);

@@ -44,14 +44,14 @@
         <h2>Login</h2>
         <form th:action="@{/login}" method="post">
             <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
+                <label for="email">Email::</label>
+                <input type="text" id="email" name="email" required>
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            <button type="submit" class="btn-login">Log In</button>
+            <button type="submit" id="loginBtn" class="btn-login">Log In</button>
         </form>
     </div>
 
@@ -90,14 +90,43 @@ function updateCartPanel() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    updateCartPanel();
     const cartIcon = document.getElementById("cartIcon");
     const cartPanel = document.getElementById("cartPanel");
-    const addToCartButton = document.getElementById("addToCartButton");
 
+    const loginBtn = document.getElementById("loginBtn");
+    loginBtn.addEventListener("click", function () {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        const url = `http://localhost:8080/login?email=${email}&password=${password}`;
+
+        fetch(url, {
+            method: 'GET',
+        })
+        .then(response => {
+            return response.text()
+        })
+        .then(data => {
+            if (data == "login_successful") {
+                alert("log in successful");
+            } else if (data == "login_fail") {
+                alert("Incorrect password.");
+                throw new Error('Incorrect Password.');
+            } else {
+                console.log(response.text);
+                alert("Email does not exist. Please sign up before proceeding.");
+                throw new Error('Email does not exist.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+
+    updateCartPanel();
     cartIcon.addEventListener("click", toggleCartPanel);
-
 });
+
 </script>
 
 <footer>
