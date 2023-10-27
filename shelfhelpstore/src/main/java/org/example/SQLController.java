@@ -142,9 +142,10 @@ public class SQLController {
     public boolean doesEmailAlreadyExist(String email) {
         try{
             Statement statement = connection.createStatement();
-            int result = statement.executeUpdate("SELECT COUNT(*) FROM customers WHERE email = \""+ email + "\";");
-            System.out.println(result);
-            return (result > 0);
+            ResultSet result = statement.executeQuery("SELECT COUNT(*) FROM customers WHERE email = \""+ email + "\";");
+            result.next();
+            System.out.println(result.getInt(1));
+            return (result.getInt(1) > 0);
         }
         catch (Exception e) {
             e.printStackTrace();

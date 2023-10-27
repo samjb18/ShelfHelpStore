@@ -123,9 +123,10 @@ document.addEventListener("DOMContentLoaded", function () {
             method: 'GET',
         })
         .then(response => {
-            if (response.ok) {
+            if (response.text == "signup_Success") {
                 return response.text();
             } else {
+                alert("Email already exists!");
                 throw new Error('Network response was not ok');
             }
         })
