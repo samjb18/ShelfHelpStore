@@ -7,12 +7,7 @@ pipeline {
         }
 
         stages {
-          stage('Checkout') {
-              steps {
-                 // Run Maven on a Unix agent.
-                 git branch:'main', url:'https://github.com/samjb18/ShelfHelpStore'
-              }
-           }
+          
           stage('Compile') {
               steps {
                  // Run Maven on a Unix agent.
